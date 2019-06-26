@@ -27,25 +27,41 @@ public class BasicOperation {
         c = 1 / 2;
         c = 1 % 2;
 
+        //位运算
+        int bit = 0b01001110 & 0x0F;
+        System.out.println("位运算-与:"+Integer.toBinaryString(bit));
+
+        int bit3 = 0b01001110 | 0x0F;
+        System.out.println("位运算-或:"+Integer.toBinaryString(bit3));
+
+
+        int bit1 = 1<<3;
+        System.out.println("左移运算:"+bit1);
+
+        int bit2 = 8>>3;
+        System.out.println("右移运算:"+bit2);
 
         //for 循环
         for (int i = 0; i < 10; i++) {
-            System.out.println(i);
+            System.out.print(i);
         }
+        System.out.println();
 
         //while 循环
         int a = 10;
         while (a > 0) {
-            System.out.println(a);
+            System.out.print(a);
             a--;
         }
+        System.out.println();
 
         //do while循环
         a = 10;
         do {
-            System.out.println(a);
+            System.out.print(a);
             a--;
         }while (a>0);
+        System.out.println();
 
         //函数与方法
         print("hello world");
