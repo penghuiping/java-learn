@@ -40,6 +40,10 @@ public class LambdaExamples {
 
         var scores = List.of(score0,score1,score2,score3,score4,score5);
 
+        //根据姓名分组,并且计算分数相关统计指标
+        var result2 = scores.stream().collect(Collectors.groupingBy(Score::getName,Collectors.summarizingInt(value -> value.getScore())));
+        System.out.println(result2);
+
 
     }
 }
