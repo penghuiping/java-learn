@@ -1,17 +1,20 @@
 package time;
 
+import org.junit.Test;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
  * @author: penghuiping
- * @date: 2019/6/25 17:47
+ * @date: 2019/6/28 15:39
  * @description:
  */
-public class TimeOperation {
+public class TimeTest {
 
-    public static void main(String[] args) {
+    @Test
+    public void test() {
         LocalDateTime localDateTime0 = LocalDateTime.now();
         System.out.println(localDateTime0);
 

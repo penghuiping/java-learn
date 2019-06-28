@@ -1,5 +1,7 @@
 package file;
 
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,12 +13,13 @@ import java.nio.file.attribute.PosixFilePermissions;
 
 /**
  * @author: penghuiping
- * @date: 2019/6/25 16:48
- * @description:
+ * @date: 2019/6/28 15:42
+ * @description: 文件处理
  */
-public class FileSystem {
+public class FileTest {
 
-    public static void main(String[] args) {
+    @Test
+    public void test() {
         Path file1 = Paths.get("/Users/penghuiping/Desktop/joinsoft-docker", "a.txt");
 
         //判断文件是否存在
@@ -47,8 +50,5 @@ public class FileSystem {
         } catch (IOException e) {
 
         }
-
     }
-
-
 }

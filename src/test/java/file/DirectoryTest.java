@@ -1,5 +1,7 @@
 package file;
 
+import org.junit.Test;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,12 +10,13 @@ import java.nio.file.attribute.PosixFilePermissions;
 
 /**
  * @author: penghuiping
- * @date: 2019/6/25 18:15
- * @description:
+ * @date: 2019/6/28 15:40
+ * @description: 文件夹处理
  */
-public class DirectorySystem {
+public class DirectoryTest {
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void test() throws Exception {
         //展示目录结构
         Path path = Paths.get("/Users/penghuiping/Desktop");
         Files.list(path).forEach(System.out::println);
