@@ -5,7 +5,7 @@ package oop;
  * @date: 2019/6/27 10:07
  * @description: 动物父类
  */
-class Animal {
+public class Animal {
     int age;
 
     public Animal(int age) {
