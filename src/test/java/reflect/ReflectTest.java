@@ -27,7 +27,7 @@ public class ReflectTest {
 
         System.out.println();
 
-        //获取泪下声明的属性
+        //获取类下声明的属性
         Field[] fields = cls.getDeclaredFields();
         for (var field : fields) {
             System.out.println(field.getName());
@@ -40,5 +40,6 @@ public class ReflectTest {
         var method = cls.getDeclaredMethod("setName", String.class);
         method.invoke(p, "小张");
         p.desc();
+
     }
 }
