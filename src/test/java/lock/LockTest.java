@@ -12,9 +12,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * @description:
  */
 public class LockTest {
-
     @Test
-    public void test() {
+    public void producerAndConsumerPattern() {
         Lock lock = new ReentrantLock();
 
         var producerCondition = lock.newCondition();

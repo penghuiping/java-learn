@@ -11,6 +11,7 @@ import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -99,8 +100,17 @@ public class TcpSocketTest {
             }
         };
         asynChannel.accept(null, hander);
-        for (; ; ) ;
 
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+           String input =  scanner.next();
+           if(input.contains("quit")) {
+               break;
+           }
+        }
+
+        group.shutdownNow();
+        asynChannel.close();
     }
 
 
