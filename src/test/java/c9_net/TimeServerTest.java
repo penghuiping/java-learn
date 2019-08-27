@@ -43,7 +43,7 @@ public class TimeServerTest {
                             break;
                         }else if(value.contains("time")) {
                             var localDateTime = LocalDateTime.now();
-                            var now = localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"));
+                            var now = localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                             var buf = ByteBuffer.wrap((now+"\r\n").getBytes());
                             result.write(buf);
                         }

@@ -34,10 +34,10 @@ public class LockTest {
                     if (basket.size() >= 10) {
                         producerCondition.await();
                     }
-                    lock.unlock();
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }finally {
+                    lock.unlock();
                 }
             }
 
@@ -56,9 +56,10 @@ public class LockTest {
                     if (basket.size() <= 0) {
                         consumerCondition.await();
                     }
-                    lock.unlock();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }finally {
+                    lock.unlock();
                 }
             }
         }).start();

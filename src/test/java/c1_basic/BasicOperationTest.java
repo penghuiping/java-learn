@@ -69,6 +69,10 @@ public class BasicOperationTest {
         //右移
         int bit2 = 8 >> 3;
         System.out.println("右移运算:" + bit2);
+
+        //-1 二进制表示 负数在计算机中都是用补码表示的,补码是原码取反加一
+        int bit7 = -1;
+        System.out.println("-1的二进制表示为:"+Integer.toBinaryString(bit7));
     }
 
     /**

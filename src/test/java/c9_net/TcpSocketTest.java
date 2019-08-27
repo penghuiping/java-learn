@@ -1,5 +1,15 @@
 package c9_net;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -103,10 +113,10 @@ public class TcpSocketTest {
 
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNext()) {
-           String input =  scanner.next();
-           if(input.contains("quit")) {
-               break;
-           }
+            String input = scanner.next();
+            if (input.contains("quit")) {
+                break;
+            }
         }
 
         group.shutdownNow();
@@ -116,7 +126,33 @@ public class TcpSocketTest {
 
     @Test
     public void nioTcpServer() throws Exception {
+        NioEventLoopGroup boss = new NioEventLoopGroup(1);
+        NioEventLoopGroup group = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
+        try {
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(boss, group)
+                    .channel(NioServerSocketChannel.class)
+                    .childHandler(new ChannelInitializer() {
+                        @Override
+                        protected void initChannel(Channel channel) {
+                            channel.pipeline()
+                                    .addLast(new SimpleChannelInboundHandler<ByteBuf>() {
+                                        @Override
+                                        protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
+                                            System.out.println(new String(Unpooled.copiedBuffer(msg).array()));
+                                            ctx.close();
+                                        }
+                                    });
+                        }
+                    });
 
+            ChannelFuture f = b.bind(8080).sync();
+            System.out.println(" started and listen on " + f.channel().localAddress());
+            f.channel().closeFuture().sync();
+        } finally {
+            group.shutdownGracefully().sync();
+            boss.shutdownGracefully().sync();
+        }
 
     }
 }
