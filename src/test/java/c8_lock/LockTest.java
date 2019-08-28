@@ -3,6 +3,11 @@ package c8_lock;
 import org.junit.Test;
 
 import java.util.LinkedList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -36,7 +41,7 @@ public class LockTest {
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally {
+                } finally {
                     lock.unlock();
                 }
             }
@@ -58,7 +63,7 @@ public class LockTest {
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally {
+                } finally {
                     lock.unlock();
                 }
             }
@@ -67,5 +72,91 @@ public class LockTest {
 
         for (; ; ) ;
 
+    }
+
+
+    private class Counter {
+        Integer count;
+
+        public Integer getCount() {
+            return count;
+        }
+
+        public void setCount(Integer count) {
+            this.count = count;
+        }
+    }
+
+
+    @Test
+    public void testWaitCondition() throws Exception {
+        ExecutorService executorService = Executors.newFixedThreadPool(20);
+
+        CountDownLatch countDownLatch = new CountDownLatch(200000);
+        for (int i = 0; i < 200000; i++) {
+            executorService.submit(() -> {
+                Lock lock = new ReentrantLock();
+                Condition countZero = lock.newCondition();
+
+                Counter count = new Counter();
+                count.setCount(2);
+
+                final AtomicInteger value1 = new AtomicInteger(0);
+                final AtomicInteger value2 = new AtomicInteger(0);
+
+                executorService.submit(() -> {
+                    value1.set(1);
+                    try {
+                        lock.lock();
+                        count.setCount(count.getCount() - 1);
+                        countZero.signalAll();
+                    } finally {
+                        lock.unlock();
+                    }
+
+
+                });
+
+                executorService.submit(() -> {
+                    value2.set(2);
+                    try {
+                        lock.lock();
+                        count.setCount(count.getCount() - 1);
+                        countZero.signalAll();
+                    } finally {
+                        lock.unlock();
+                    }
+                });
+
+                executorService.submit(() -> {
+                    while (true) {
+                        try {
+                            try {
+                                lock.lock();
+                                if (count.getCount() <= 0) {
+                                    break;
+                                } else {
+                                    countZero.await();
+                                }
+                            } finally {
+                                lock.unlock();
+                            }
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if ((value1.get() + value2.get()) == 3) {
+
+                    } else {
+                        System.out.println("最终执行结果错误为:" + (value1.get() + value2.get()));
+                    }
+                    countDownLatch.countDown();
+                });
+            });
+        }
+
+        countDownLatch.await();
     }
 }

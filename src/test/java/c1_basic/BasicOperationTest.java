@@ -62,17 +62,26 @@ public class BasicOperationTest {
         int bit5 = 0b01001110 ^ 0x0;
         System.out.println("位运算-异或:" + Integer.toBinaryString(bit5));
 
-        //左移
+        //有符号左移
         int bit1 = 1 << 3;
-        System.out.println("左移运算:" + bit1);
+        System.out.println("有符号左移运算:" + bit1);
 
-        //右移
+        //有符号右移
         int bit2 = 8 >> 3;
-        System.out.println("右移运算:" + bit2);
+        System.out.println("有符号右移运算:" + bit2);
+
+        //无符号右移动
+        int bit8 = -8 >>> 3;
+        System.out.println("-8二进制为:" + Integer.toBinaryString(-8));
+        System.out.println("无符号右移运算:" + Integer.toBinaryString(bit8));
 
         //-1 二进制表示 负数在计算机中都是用补码表示的,补码是原码取反加一
         int bit7 = -1;
-        System.out.println("-1的二进制表示为:"+Integer.toBinaryString(bit7));
+        System.out.println("-1的二进制表示为:" + Integer.toBinaryString(bit7));
+
+        //如果被除数是偶数，&运算可以用来代替%(取余)
+        int bit9 = 121;
+        System.out.println("操作符&与%相同:"+((bit9%8)==(bit9&(8-1))));
     }
 
     /**
@@ -105,7 +114,7 @@ public class BasicOperationTest {
         do {
             System.out.print(a);
             a--;
-        }while (a>0);
+        } while (a > 0);
         System.out.println();
     }
 }
