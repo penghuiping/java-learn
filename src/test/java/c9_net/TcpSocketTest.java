@@ -22,8 +22,10 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.Scanner;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author: penghuiping
@@ -74,11 +76,13 @@ public class TcpSocketTest {
         var group = AsynchronousChannelGroup.withThreadPool(executorService);
         var asynChannel = AsynchronousServerSocketChannel.open(group).bind(socketAddress);
 
+
         var hander = new CompletionHandler<AsynchronousSocketChannel, Object>() {
             @Override
             public void completed(AsynchronousSocketChannel result, Object attachment) {
                 asynChannel.accept(null, this);
                 System.out.println("当前线程" + Thread.currentThread().getName());
+                var atomicInteger = new AtomicInteger(0);
                 try {
                     if (null != result && result.isOpen()) {
                         var buf = ByteBuffer.allocate(8);
@@ -89,7 +93,8 @@ public class TcpSocketTest {
                             buf.flip();
                             result.write(buf);
                             var cmd = new String(buf.array(), 0, receiveLength);
-                            if (cmd.contains("quit")) {
+                            atomicInteger.addAndGet(receiveLength);
+                            if (cmd.contains("quit") || atomicInteger.get() >= 30) {
                                 break;
                             }
                             buf.clear();
@@ -153,6 +158,75 @@ public class TcpSocketTest {
             group.shutdownGracefully().sync();
             boss.shutdownGracefully().sync();
         }
+
+    }
+
+    @Test
+    public void aioClient() throws Exception {
+        SocketAddress socketAddress = new InetSocketAddress("localhost", 8080);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(512);
+
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        AsynchronousSocketChannel asynchronousSocketChannel = AsynchronousSocketChannel.open();
+        asynchronousSocketChannel.connect(socketAddress, null, new CompletionHandler<Void, Object>() {
+            @Override
+            public void completed(Void result, Object attachment) {
+
+                while (asynchronousSocketChannel.isOpen()) {
+                    byteBuffer.clear();
+                    byteBuffer.put("！！！".getBytes());
+                    byteBuffer.flip();
+
+                    asynchronousSocketChannel.write(byteBuffer, null, new CompletionHandler<Integer, Object>() {
+                        @Override
+                        public void completed(Integer result, Object attachment) {
+                            byteBuffer.clear();
+                            asynchronousSocketChannel.read(byteBuffer, null, new CompletionHandler<Integer, Object>() {
+                                @Override
+                                public void completed(Integer result, Object attachment) {
+                                    byteBuffer.flip();
+                                    System.out.println(new String(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit()));
+                                }
+
+                                @Override
+                                public void failed(Throwable exc, Object attachment) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void failed(Throwable exc, Object attachment) {
+                            exc.printStackTrace();
+                            try {
+                                asynchronousSocketChannel.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                countDownLatch.countDown();
+
+            }
+
+            @Override
+            public void failed(Throwable exc, Object attachment) {
+            }
+        });
+
+
+        countDownLatch.await();
+
+
+
 
     }
 }

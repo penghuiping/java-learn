@@ -3,6 +3,7 @@ package c1_basic;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**

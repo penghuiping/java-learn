@@ -88,6 +88,10 @@ public class LockTest {
     }
 
 
+    /**
+     * 线程3等待线程1与线程2执行完成以后执行
+     * @throws Exception
+     */
     @Test
     public void testWaitCondition() throws Exception {
         ExecutorService executorService = Executors.newFixedThreadPool(20);
