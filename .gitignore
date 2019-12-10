@@ -2,4 +2,8 @@
 .idea
 *.iml
 target
-
+.org.eclipse.*
+.classpath
+.project
+.settings
+.vscode
