@@ -19,5 +19,8 @@ public class MapTest {
         var map1 = new HashMap<>(map0);
         map1.put("height",170);
         System.out.println(map1);
+
+        var map2 = Map.ofEntries(Map.entry("name","mary"),Map.entry("age",13));
+        System.out.println(map2);
     }
 }

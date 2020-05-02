@@ -11,3 +11,5 @@ class Horse implements Run {
         System.out.println("马用四条腿来跑");
     }
 }
+
+
