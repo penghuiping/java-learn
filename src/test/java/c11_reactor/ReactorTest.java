@@ -1,8 +1,5 @@
 package c11_reactor;
 
-import io.netty.util.concurrent.DefaultEventExecutorGroup;
-import io.netty.util.concurrent.EventExecutorGroup;
-import io.netty.util.concurrent.Future;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,10 +20,11 @@ public class ReactorTest {
     @Test
     public void test1() throws Exception {
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        Flux<Integer> flux = Flux.just(1, 2, 3, 4, 5, 6).map(i -> {
-            System.out.println("平方计算,当前执行在线程:" + Thread.currentThread().getName());
-            return i * i;
-        })
+        Flux<Integer> flux = Flux.just(1, 2, 3, 4, 5, 6)
+                .map(i -> {
+                    System.out.println("平方计算,当前执行在线程:" + Thread.currentThread().getName());
+                    return i * i;
+                })
                 .publishOn(Schedulers.single())
                 .filter(y -> {
                     System.out.println("过滤出偶数,当前执行在线程:" + Thread.currentThread().getName());
@@ -81,7 +79,7 @@ public class ReactorTest {
         Mono.fromCallable(() -> {
             System.out.println("线程1为:" + Thread.currentThread().getName());
             return List.of(1, 2, 3);
-        }).publishOn(Schedulers.parallel()).zipWith(Mono.fromCallable(() -> {
+        }).publishOn(Schedulers.elastic()).zipWith(Mono.fromCallable(() -> {
             System.out.println("线程2为:" + Thread.currentThread().getName());
             return List.of(4, 5);
         })).publishOn(Schedulers.parallel()).map(objects -> {
@@ -102,9 +100,6 @@ public class ReactorTest {
                 });
         countDownLatch.await();
     }
-
-
-
 
 
 }

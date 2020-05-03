@@ -2,6 +2,7 @@ package c2_collections;
 
 import org.junit.Test;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
