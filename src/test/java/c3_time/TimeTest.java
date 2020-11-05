@@ -2,8 +2,12 @@ package c3_time;
 
 import org.junit.Test;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -39,5 +43,16 @@ public class TimeTest {
         LocalDateTime end1 = localDate1.atTime(23, 59, 59, 999);
         System.out.println(start1.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         System.out.println(end1.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+
+        ZonedDateTime shanghaiTime = Instant.now().atZone(ZoneId.of("Asia/Shanghai"));
+        System.out.println("上海时间:" + shanghaiTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        ZonedDateTime parisTime = Instant.now().atZone(ZoneId.of("Europe/Paris"));
+        System.out.println("巴黎时间:" + parisTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        System.out.println("UTC时间戳:"+Instant.now(Clock.systemUTC()).toEpochMilli());
+        System.out.println("UTC时间戳:"+System.currentTimeMillis());
+
     }
 }

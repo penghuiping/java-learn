@@ -3,6 +3,7 @@ package c1_basic;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -52,8 +53,8 @@ public class StringTest {
 
         //把utf-8编码转换成GBK编码
         var bb = "你好，世界";
-        byte[] arr = bb.getBytes(Charset.forName("utf-8"));
-        var bb1 = new String(arr, Charset.forName("GBK"));
+        byte[] arr = bb.getBytes(StandardCharsets.UTF_8);
+        var bb1 = new String(arr,Charset.forName("GBK"));
         System.out.println(bb1);
 
 
