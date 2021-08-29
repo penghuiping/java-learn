@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -17,32 +18,42 @@ import java.util.concurrent.locks.ReentrantLock;
  * @description:
  */
 public class LockTest {
+
+    /**
+     * 生产者消费者模型
+     */
     @Test
     public void producerAndConsumerPattern() {
         Lock lock = new ReentrantLock();
-
-        var producerCondition = lock.newCondition();
-        var consumerCondition = lock.newCondition();
-
+        var basketFullCondition = lock.newCondition();
+        var basketEmptyCondition = lock.newCondition();
+        var basketMaxSize = 10;
         var basket = new LinkedList<>();
-
 
         //生产苹果 1秒生产一个
         new Thread(() -> {
             while (true) {
+                lock.lock();
                 try {
-                    Thread.sleep(1000);
-                    lock.lock();
                     basket.push("1");
-                    consumerCondition.signal();
+                    basketEmptyCondition.signalAll();
                     System.out.println("成功生成1个，目前篮子里有" + basket.size() + "个");
-                    if (basket.size() >= 10) {
-                        producerCondition.await();
+                    //这里要用while,因为唤醒以后需要重新在一次判断条件是否满足，很可能因为signalAll(),其他的生产者线程先一步已经把苹果生产好了，那么篮子又满了，你需要继续等待,
+                    while (basket.size() >= basketMaxSize) {
+                        try {
+                            basketFullCondition.await();
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 } finally {
                     lock.unlock();
+                }
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
 
@@ -52,20 +63,28 @@ public class LockTest {
         //消费苹果  5秒消费一个
         new Thread(() -> {
             while (true) {
+                lock.lock();
                 try {
-                    Thread.sleep(5000);
-                    lock.lock();
                     basket.pop();
-                    producerCondition.signal();
+                    basketFullCondition.signalAll();
                     System.out.println("成功消费1个，目前篮子里有" + basket.size() + "个");
-                    if (basket.size() <= 0) {
-                        consumerCondition.await();
+                    while (basket.size() <= 0) {
+                        try {
+                            basketEmptyCondition.await();
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 } finally {
                     lock.unlock();
                 }
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+
             }
         }).start();
 
@@ -90,76 +109,62 @@ public class LockTest {
 
     /**
      * 线程3等待线程1与线程2执行完成以后执行
+     *
      * @throws Exception
      */
     @Test
     public void testWaitCondition() throws Exception {
-        ExecutorService executorService = Executors.newFixedThreadPool(20);
+        int cpu = Runtime.getRuntime().availableProcessors();
+        ExecutorService executorService = Executors.newFixedThreadPool(cpu + 1);
+        Lock lock = new ReentrantLock();
+        Condition countZero = lock.newCondition();
+        Counter count = new Counter();
+        count.setCount(2);
+        CountDownLatch countDownLatch = new CountDownLatch(3);
 
-        CountDownLatch countDownLatch = new CountDownLatch(200000);
-        for (int i = 0; i < 200000; i++) {
-            executorService.submit(() -> {
-                Lock lock = new ReentrantLock();
-                Condition countZero = lock.newCondition();
+        //线程1
+        executorService.submit(() -> {
+            lock.lock();
+            try {
+                count.setCount(count.getCount() - 1);
+                countZero.signalAll();
+            } finally {
+                System.out.println("线程1执行完成");
+                lock.unlock();
+            }
+            countDownLatch.countDown();
+        });
 
-                Counter count = new Counter();
-                count.setCount(2);
+        //线程2
+        executorService.submit(() -> {
+            lock.lock();
+            try {
+                count.setCount(count.getCount() - 1);
+                countZero.signalAll();
+            } finally {
+                System.out.println("线程2执行完成");
+                lock.unlock();
+            }
+            countDownLatch.countDown();
+        });
 
-                final AtomicInteger value1 = new AtomicInteger(0);
-                final AtomicInteger value2 = new AtomicInteger(0);
-
-                executorService.submit(() -> {
-                    value1.set(1);
+        //线程3
+        executorService.submit(() -> {
+            lock.lock();
+            try {
+                while (count.getCount() > 0) {
                     try {
-                        lock.lock();
-                        count.setCount(count.getCount() - 1);
-                        countZero.signalAll();
-                    } finally {
-                        lock.unlock();
+                        countZero.await(5, TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                     }
-
-
-                });
-
-                executorService.submit(() -> {
-                    value2.set(2);
-                    try {
-                        lock.lock();
-                        count.setCount(count.getCount() - 1);
-                        countZero.signalAll();
-                    } finally {
-                        lock.unlock();
-                    }
-                });
-
-                executorService.submit(() -> {
-                    while (true) {
-                        try {
-                            try {
-                                lock.lock();
-                                if (count.getCount() <= 0) {
-                                    break;
-                                } else {
-                                    countZero.await();
-                                }
-                            } finally {
-                                lock.unlock();
-                            }
-
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    if ((value1.get() + value2.get()) == 3) {
-
-                    } else {
-                        System.out.println("最终执行结果错误为:" + (value1.get() + value2.get()));
-                    }
-                    countDownLatch.countDown();
-                });
-            });
-        }
+                }
+                System.out.println("线程3执行业务逻辑,count:" + count.getCount());
+            } finally {
+                lock.unlock();
+            }
+            countDownLatch.countDown();
+        });
 
         countDownLatch.await();
     }

@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -26,37 +27,29 @@ public class SynchronizedTest {
 
 
     @Test
-    public void test() throws Exception{
-
-        ExecutorService executorService =  new ThreadPoolExecutor(10, 20,
-                0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<Runnable>());
-
+    public void test() throws Exception {
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
         CountDownLatch countDownLatch1 = new CountDownLatch(1000);
-        for(int i=0;i<1000;i++) {
-            executorService.submit(()->{
+        for (int i = 0; i < 1000; i++) {
+            executorService.submit(() -> {
                 increaseWithLock();
                 countDownLatch1.countDown();
             });
         }
         countDownLatch1.await();
 
-        System.out.println("加了同步锁以后的情况,count:"+count);
+        System.out.println("加了同步锁以后的情况,count:" + count);
 
         count = 0;
-
         CountDownLatch countDownLatch2 = new CountDownLatch(1000);
-        for(int i=0;i<1000;i++) {
-            executorService.submit(()->{
+        for (int i = 0; i < 1000; i++) {
+            executorService.submit(() -> {
                 increaseWithoutLock();
                 countDownLatch2.countDown();
             });
         }
         countDownLatch2.await();
-
-        System.out.println("没有加同步锁以后的情况,count:"+count);
-
-
+        System.out.println("没有加同步锁以后的情况,count:" + count);
 
 
     }
