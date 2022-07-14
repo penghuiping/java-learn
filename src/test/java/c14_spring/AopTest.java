@@ -1,5 +1,6 @@
 package c14_spring;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import javax.annotation.Nullable;
  * @author penghuiping
  * @date 2022/7/14 22:20
  */
+@Slf4j
 public class AopTest {
 
     public interface HttpPost {
@@ -22,7 +24,7 @@ public class AopTest {
     public class HttpPostImpl implements HttpPost {
         @Override
         public void doPost() {
-            System.out.println("do http post....");
+            log.info("do http post....");
         }
     }
 
@@ -33,9 +35,9 @@ public class AopTest {
             @Nullable
             @Override
             public Object invoke(@Nonnull MethodInvocation invocation) throws Throwable {
-                System.out.println("before method invocation,first interceptor");
+                log.info("before method invocation,first interceptor");
                 Object res = invocation.proceed();
-                System.out.println("after method invocation,first interceptor");
+                log.info("after method invocation,first interceptor");
                 return res;
             }
         });
@@ -43,9 +45,9 @@ public class AopTest {
             @Nullable
             @Override
             public Object invoke(@Nonnull MethodInvocation invocation) throws Throwable {
-                System.out.println("before method invocation,second interceptor");
+                log.info("before method invocation,second interceptor");
                 Object res =  invocation.proceed();
-                System.out.println("after method invocation,second interceptor");
+                log.info("after method invocation,second interceptor");
                 return res;
             }
         });
