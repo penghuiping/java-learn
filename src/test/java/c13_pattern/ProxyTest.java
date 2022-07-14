@@ -15,7 +15,7 @@ import java.util.List;
 public class ProxyTest {
 
     @Test
-    public void test() {
+    public void jdkTest() {
         List<String> origin = new ArrayList<>();
         List<String> proxy = ListProxy.getProxy(origin);
         for(int i=0;i<10;i++) {
@@ -23,8 +23,6 @@ public class ProxyTest {
         }
         proxy.size();
     }
-
-
 }
 
 
