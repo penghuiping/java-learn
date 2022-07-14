@@ -11,9 +11,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
 /**
- * @author: penghuiping
- * @date: 2019/6/27 10:16
- * @description:
+ * 列表
+ *
+ * @author penghuiping
+ * @date 2019/6/27 10:16
  */
 public class ListTest {
 
@@ -24,7 +25,7 @@ public class ListTest {
         var list0 = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8));
         System.out.println(list0);
 
-        list0.removeIf(a->a%2==0);
+        list0.removeIf(a -> a % 2 == 0);
         System.out.println(list0);
     }
 

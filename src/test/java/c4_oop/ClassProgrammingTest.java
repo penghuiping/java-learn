@@ -3,9 +3,10 @@ package c4_oop;
 import org.junit.Test;
 
 /**
- * @author: penghuiping
- * @date: 2019/6/27 10:12
- * @description: 类对象编程
+ * 类对象编程
+ *
+ * @author penghuiping
+ * @date 2019/6/27 10:12
  */
 public class ClassProgrammingTest {
 

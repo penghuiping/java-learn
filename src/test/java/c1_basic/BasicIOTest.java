@@ -6,9 +6,10 @@ import java.io.ByteArrayInputStream;
 import java.util.Scanner;
 
 /**
- * @author: penghuiping
- * @date: 2019/7/3 23:35
- * @description:
+ * 控制台输入输出
+ *
+ * @author penghuiping
+ * @date 2019/7/3 23:35
  */
 public class BasicIOTest {
 

@@ -3,9 +3,10 @@ package c1_basic;
 import org.junit.Test;
 
 /**
- * @author: penghuiping
- * @date: 2019/6/26 18:01
- * @description:
+ * 数据类型与操作符与循环分支操作
+ *
+ * @author penghuiping
+ * @date 2019/6/26 18:01
  */
 public class BasicOperationTest {
 
@@ -81,7 +82,7 @@ public class BasicOperationTest {
 
         //如果被除数是偶数，&运算可以用来代替%(取余)
         int bit9 = 121;
-        System.out.println("操作符&与%相同:"+((bit9%8)==(bit9&(8-1))));
+        System.out.println("操作符&与%相同:" + ((bit9 % 8) == (bit9 & (8 - 1))));
     }
 
     /**

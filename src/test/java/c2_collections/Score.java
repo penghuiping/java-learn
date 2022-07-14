@@ -1,9 +1,8 @@
 package c2_collections;
 
 /**
- * @author: penghuiping
- * @date: 2019/6/27 10:41
- * @description:
+ * @author penghuiping
+ * @date 2019/6/27 10:41
  */
 class Score {
 

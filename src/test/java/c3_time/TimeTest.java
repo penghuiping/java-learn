@@ -11,9 +11,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * @author: penghuiping
- * @date: 2019/6/28 15:39
- * @description:
+ * 日期与时间相关操作
+ *
+ * @author penghuiping
+ * @date 2019/6/28 15:39
  */
 public class TimeTest {
 
@@ -51,8 +52,8 @@ public class TimeTest {
         ZonedDateTime parisTime = Instant.now().atZone(ZoneId.of("Europe/Paris"));
         System.out.println("巴黎时间:" + parisTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
-        System.out.println("UTC时间戳:"+Instant.now(Clock.systemUTC()).toEpochMilli());
-        System.out.println("UTC时间戳:"+System.currentTimeMillis());
+        System.out.println("UTC时间戳:" + Instant.now(Clock.systemUTC()).toEpochMilli());
+        System.out.println("UTC时间戳:" + System.currentTimeMillis());
 
     }
 }

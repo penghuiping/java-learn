@@ -6,15 +6,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author: penghuiping
- * @date: 2019/6/27 10:16
- * @description:
+ * 集合
+ *
+ * @author penghuiping
+ * @date 2019/6/27 10:16
  */
 public class SetTest {
 
     @Test
     public void test() {
-        var set0 = Set.of(1,3,2,4,5,7);
+        var set0 = Set.of(1, 3, 2, 4, 5, 7);
         System.out.println(set0);
         var set1 = set0.stream().sorted().collect(Collectors.toSet());
         System.out.println(set1);

@@ -8,9 +8,10 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * @author: penghuiping
- * @date: 2019/6/28 15:46
- * @description: 字符串相关操作
+ * 字符串相关操作
+ *
+ * @author penghuiping
+ * @date 2019/6/28 15:46
  */
 public class StringTest {
 
@@ -54,7 +55,7 @@ public class StringTest {
         //把utf-8编码转换成GBK编码
         var bb = "你好，世界";
         byte[] arr = bb.getBytes(StandardCharsets.UTF_8);
-        var bb1 = new String(arr,Charset.forName("GBK"));
+        var bb1 = new String(arr, Charset.forName("GBK"));
         System.out.println(bb1);
 
 
@@ -62,7 +63,7 @@ public class StringTest {
         var cc = "我是一段文字<span>中国你好</span>！！！！你知道吗？<span>很好</span>就是这样子。";
         var pattern = Pattern.compile("<span>([^<]*)</span>");
         var matcher = pattern.matcher(cc);
-        System.out.println("分组数量:"+matcher.groupCount());
+        System.out.println("分组数量:" + matcher.groupCount());
         matcher.results().forEach(matchResult -> {
             var tmp = matchResult.group(1);
             System.out.println(tmp);

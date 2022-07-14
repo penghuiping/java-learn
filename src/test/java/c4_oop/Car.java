@@ -1,11 +1,10 @@
 package c4_oop;
 
 /**
- * @author: penghuiping
- * @date: 2019/6/27 10:04
- * @description:
+ * @author penghuiping
+ * @date 2019/6/27 10:04
  */
-class Car implements Run{
+class Car implements Run {
     @Override
     public void runing() {
         System.out.println("汽车用四个轮子跑");
