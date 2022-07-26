@@ -1,5 +1,6 @@
 package c14_spring;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.DefaultConversionService;
@@ -13,6 +14,7 @@ import java.util.Date;
  * @author penghuiping
  * @date 2022/7/14 22:09
  */
+@Slf4j
 public class BeanConvertTest {
 
     @Test
