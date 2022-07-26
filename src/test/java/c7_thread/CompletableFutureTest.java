@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,7 @@ public class CompletableFutureTest {
     public static String getWeatherReport() {
         try {
             Thread.sleep(1000);
+            System.out.printf("thread:%s%n", Thread.currentThread().getName());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -29,6 +31,7 @@ public class CompletableFutureTest {
     public static String getTemperatureReport() {
         try {
             Thread.sleep(1000);
+            System.out.printf("thread:%s%n", Thread.currentThread().getName());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
