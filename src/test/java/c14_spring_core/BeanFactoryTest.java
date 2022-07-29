@@ -1,4 +1,4 @@
-package c14_spring;
+package c14_spring_core;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -81,7 +81,7 @@ public class BeanFactoryTest {
     public void createTest1() {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
         ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(applicationContext);
-        scanner.scan("c14_spring");
+        scanner.scan("c14_spring_core");
         applicationContext.getDefaultListableBeanFactory().addBeanPostProcessor(new BeanPostProcessor() {
             @Override
             public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {

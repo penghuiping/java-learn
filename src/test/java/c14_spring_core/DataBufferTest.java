@@ -1,4 +1,4 @@
-package c14_spring;
+package c14_spring_core;
 
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;

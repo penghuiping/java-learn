@@ -1,4 +1,4 @@
-package c14_spring;
+package c14_spring_core;
 
 import lombok.Getter;
 import lombok.Setter;
