@@ -34,6 +34,7 @@ public class BeanFactoryTest {
     @Test
     public void createTest() {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+        //BeanDefinition
         applicationContext.registerBeanDefinition("userDao",BeanDefinitionBuilder
                 .rootBeanDefinition(UserDaoImpl.class)
                 .getBeanDefinition());
@@ -41,6 +42,7 @@ public class BeanFactoryTest {
                 .rootBeanDefinition(UserServiceImpl.class)
                 .getBeanDefinition());
         var beanFactory = applicationContext.getDefaultListableBeanFactory();
+        //BeanPostProcessor
         beanFactory.addBeanPostProcessor(new BeanPostProcessor() {
             @Override
             public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
